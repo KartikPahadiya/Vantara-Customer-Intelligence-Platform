@@ -1,0 +1,19 @@
+[project]
+name = "vantara-customer-intelligence-platform"
+version = "1.0.0"
+description = "Customer churn, CLV, segmentation and explainability platform on Online Retail II"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.coverage.run]
+source = ["src"]

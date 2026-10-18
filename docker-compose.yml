@@ -1,0 +1,44 @@
+# Single-command local deployment (PRD Section 12.3):
+#     docker-compose up --build
+# Brings up PostgreSQL, the FastAPI service and the Streamlit dashboard.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vantara}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vantara}
+      POSTGRES_DB: ${POSTGRES_DB:-vantara}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vantara}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-vantara}:${POSTGRES_PASSWORD:-vantara}@db:5432/${POSTGRES_DB:-vantara}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+
+  dashboard:
+    build: .
+    environment:
+      API_BASE_URL: http://api:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    command: streamlit run frontend/dashboard.py --server.port 8501 --server.address 0.0.0.0
+
+volumes:
+  pgdata:

@@ -1,0 +1,37 @@
+# Data (raw dataset is 43 MB — download per README instructions)
+data/raw/*.pkl
+data/raw/*.zip
+data/raw/*.xlsx
+data/interim/
+data/processed/
+
+# Trained model artifacts (regenerate with the pipeline)
+models_artifacts/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Environment / secrets (PRD Section 13: never commit credentials)
+.env
+
+# Databases
+*.db
+*.sqlite3
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
